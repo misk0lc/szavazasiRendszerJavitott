@@ -1,0 +1,196 @@
+{
+  "info": {
+    "name": "Szavazási Rendszer API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Bearer tokenes (Sanctum) API a szavazási rendszerhez"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "register"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Teszt Elek\",\n  \"email\": \"teszt@example.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"teszt@example.com\",\n  \"password\": \"secret123\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) {}",
+                  "if (json && json.access_token) {",
+                  "  pm.collectionVariables.set('token', json.access_token);",
+                  "  pm.test('Token set', function () { pm.expect(pm.collectionVariables.get('token')).to.be.a('string'); });",
+                  "} else {",
+                  "  pm.test('Token not found in response', function () { pm.expect.fail('No access_token in response'); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "logout"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.collectionVariables.set('token', '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Polls (public)",
+      "item": [
+        {
+          "name": "List polls",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/polls",
+              "host": ["{{base_url}}"],
+              "path": ["api", "polls"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show poll",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/polls/{{pollId}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "polls", "{{pollId}}"]
+            }
+          }
+        },
+        {
+          "name": "Results",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/polls/{{pollId}}/results",
+              "host": ["{{base_url}}"],
+              "path": ["api", "polls", "{{pollId}}", "results"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Polls (protected)",
+      "item": [
+        {
+          "name": "Create poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/polls",
+              "host": ["{{base_url}}"],
+              "path": ["api", "polls"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Tetszik a rendszer?\",\n  \"description\": \"Rövid leírás\",\n  \"options\": [\"Igen\", \"Nem\"],\n  \"closes_at\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "Vote",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/polls/{{pollId}}/vote",
+              "host": ["{{base_url}}"],
+              "path": ["api", "polls", "{{pollId}}", "vote"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selected_option\": \"Igen\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "pollId", "value": "1" },
+    { "key": "token", "value": "" }
+  ]
+}
