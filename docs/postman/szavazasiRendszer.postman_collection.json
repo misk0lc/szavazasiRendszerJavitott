@@ -256,11 +256,157 @@
           }
         }
       ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Update poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Módosított kérdés?\",\n  \"description\": \"Módosított leírás\",\n  \"options\": [\"Opcio 1\", \"Opcio 2\", \"Opcio 3\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete poll (soft)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}"]
+            }
+          }
+        },
+        {
+          "name": "Close poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}/close",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}", "close"]
+            }
+          }
+        },
+        {
+          "name": "Extend poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}/extend",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}", "extend"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"closes_at\": \"2025-12-31 23:59:59\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Open poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}/open",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}", "open"]
+            }
+          }
+        },
+        {
+          "name": "List trashed polls",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/trashed",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "trashed"]
+            }
+          }
+        },
+        {
+          "name": "Restore poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}/restore",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}", "restore"]
+            }
+          }
+        },
+        {
+          "name": "Force delete poll",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [ { "key": "token", "value": "{{admin_token}}", "type": "string" } ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/admin/polls/{{pollId}}/force",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "polls", "{{pollId}}", "force"]
+            }
+          }
+        }
+      ]
     }
   ],
   "variable": [
     { "key": "base_url", "value": "http://127.0.0.1:8000" },
     { "key": "pollId", "value": "1" },
-    { "key": "token", "value": "" }
+    { "key": "token", "value": "" },
+    { "key": "admin_token", "value": "" }
   ]
 }
